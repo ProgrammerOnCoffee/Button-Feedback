@@ -82,7 +82,7 @@ func _ready() -> void:
 
 
 ## Calls [member setup_button] for all [BaseButton]s
-## that [param node] is an ancestor of.
+## that [param ancestor] is an ancestor of.
 func setup_recursive(ancestor: Node) -> void:
 	var queue := ancestor.get_children()
 	while queue:
