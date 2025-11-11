@@ -132,13 +132,11 @@ func _on_button_mouse_entered(button: BaseButton) -> void:
 
 
 func _on_button_mouse_exited(button: BaseButton) -> void:
-	# Ensure mouse is outside of button, not blocked by another Control
-	if not Rect2i(Vector2.ZERO, button.size).has_point(button.get_local_mouse_position()):
-		# Kill tween if one is already running
-		if button.has_meta(&"_button_feedback_scale_tween"):
-			button.get_meta(&"_button_feedback_scale_tween").kill()
-		var tween := button.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property(button, ^":scale", Vector2.ONE,
-				# Tween for less time if button isn't fully scaled
-				remap(button.scale.x, HOVER_SCALE, 1.0, HOVER_SCALE_DURATION, 0.0))
-		button.set_meta(&"_button_feedback_scale_tween", tween)
+	# Kill tween if one is already running
+	if button.has_meta(&"_button_feedback_scale_tween"):
+		button.get_meta(&"_button_feedback_scale_tween").kill()
+	var tween := button.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(button, ^":scale", Vector2.ONE,
+			# Tween for less time if button isn't fully scaled
+			remap(button.scale.x, HOVER_SCALE, 1.0, HOVER_SCALE_DURATION, 0.0))
+	button.set_meta(&"_button_feedback_scale_tween", tween)
