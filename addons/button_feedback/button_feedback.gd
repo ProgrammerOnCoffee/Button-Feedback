@@ -73,6 +73,7 @@ func _ready() -> void:
 		player.attenuation = 0.0
 		player.max_distance = INF
 		player.panning_strength = 0.0
+		player.process_mode = PROCESS_MODE_ALWAYS
 	
 	setup_recursive(get_parent())
 	
@@ -105,7 +106,6 @@ func setup_button(button: BaseButton) -> void:
 	button.focus_exited.connect(button.remove_theme_stylebox_override.bind(&"focus"))
 	button.mouse_entered.connect(_on_button_mouse_entered.bind(button))
 	button.mouse_exited.connect(_on_button_mouse_exited.bind(button))
-	button.mouse_entered.connect(button_hover_player.play)
 	button.button_down.connect(button_down_player.play)
 	# is_class() won't error if the advanced gui module is disabled
 	if not button.is_class("OptionButton"):
@@ -119,6 +119,10 @@ func _on_button_focus_entered(button: BaseButton) -> void:
 
 
 func _on_button_mouse_entered(button: BaseButton) -> void:
+	if button.disabled or not button.can_process():
+		return
+	
+	button_hover_player.play()
 	# Set pivot offset so that button scales from center
 	button.pivot_offset = button.size / 2
 	# Kill tween if one is already running
