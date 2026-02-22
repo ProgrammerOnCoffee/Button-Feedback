@@ -102,6 +102,7 @@ func setup_button(button: BaseButton) -> void:
 	if button.button_down.is_connected(button_down_player.play):
 		return
 	
+	button.gui_input.connect(_on_button_gui_input.bind(button))
 	button.focus_entered.connect(_on_button_focus_entered.bind(button), CONNECT_DEFERRED)
 	button.focus_exited.connect(button.remove_theme_stylebox_override.bind(&"focus"))
 	button.mouse_entered.connect(_on_button_mouse_entered.bind(button))
@@ -112,9 +113,17 @@ func setup_button(button: BaseButton) -> void:
 		button.pressed.connect(button_pressed_player.play)
 
 
+func _on_button_gui_input(event: InputEvent, button: BaseButton) -> void:
+	# Hide focus if event is a mouse or touch event
+	var hide_focus := event is InputEventFromWindow and event is not InputEventKey
+	if not hide_focus:
+		button.remove_theme_stylebox_override(&"focus")
+	button.set_meta(&"_button_feedback_is_focus_hidden", hide_focus)
+
+
 func _on_button_focus_entered(button: BaseButton) -> void:
-	# Remove focus stylebox if focus is from a click
-	if button.button_pressed:
+	# Remove focus stylebox if focus is from a mouse or touch event
+	if button.get_meta(&"_button_feedback_is_focus_hidden", false):
 		button.add_theme_stylebox_override(&"focus", _stylebox_empty)
 
 
