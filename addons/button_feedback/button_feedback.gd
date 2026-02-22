@@ -123,24 +123,26 @@ func _on_button_mouse_entered(button: BaseButton) -> void:
 		return
 	
 	button_hover_player.play()
-	# Set pivot offset so that button scales from center
-	button.pivot_offset = button.size / 2
-	# Kill tween if one is already running
-	if button.has_meta(&"_button_feedback_scale_tween"):
-		button.get_meta(&"_button_feedback_scale_tween").kill()
-	var tween := button.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(button, ^":scale", Vector2.ONE * HOVER_SCALE,
-			# Tween for less time if button is already partially scaled
-			remap(button.scale.x, 1.0, HOVER_SCALE, HOVER_SCALE_DURATION, 0.0))
-	button.set_meta(&"_button_feedback_scale_tween", tween)
+	if HOVER_SCALE != 1.0:
+		# Set pivot offset so that button scales from center
+		button.pivot_offset = button.size / 2
+		# Kill tween if one is already running
+		if button.has_meta(&"_button_feedback_scale_tween"):
+			button.get_meta(&"_button_feedback_scale_tween").kill()
+		var tween := button.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(button, ^":scale", Vector2.ONE * HOVER_SCALE,
+				# Tween for less time if button is already partially scaled
+				remap(button.scale.x, 1.0, HOVER_SCALE, HOVER_SCALE_DURATION, 0.0))
+		button.set_meta(&"_button_feedback_scale_tween", tween)
 
 
 func _on_button_mouse_exited(button: BaseButton) -> void:
-	# Kill tween if one is already running
-	if button.has_meta(&"_button_feedback_scale_tween"):
-		button.get_meta(&"_button_feedback_scale_tween").kill()
-	var tween := button.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(button, ^":scale", Vector2.ONE,
-			# Tween for less time if button isn't fully scaled
-			remap(button.scale.x, HOVER_SCALE, 1.0, HOVER_SCALE_DURATION, 0.0))
-	button.set_meta(&"_button_feedback_scale_tween", tween)
+	if HOVER_SCALE != 1.0:
+		# Kill tween if one is already running
+		if button.has_meta(&"_button_feedback_scale_tween"):
+			button.get_meta(&"_button_feedback_scale_tween").kill()
+		var tween := button.create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property(button, ^":scale", Vector2.ONE,
+				# Tween for less time if button isn't fully scaled
+				remap(button.scale.x, HOVER_SCALE, 1.0, HOVER_SCALE_DURATION, 0.0))
+		button.set_meta(&"_button_feedback_scale_tween", tween)
