@@ -102,9 +102,12 @@ func setup_button(button: BaseButton) -> void:
 	if button.button_down.is_connected(button_down_player.play):
 		return
 	
-	button.gui_input.connect(_on_button_gui_input.bind(button))
-	button.focus_entered.connect(_on_button_focus_entered.bind(button), CONNECT_DEFERRED)
-	button.focus_exited.connect(button.remove_theme_stylebox_override.bind(&"focus"))
+	# Controls won't show focus state when activated by a click as of v4.6 (GH-110250)
+	# Workaround for versions pre-4.6
+	if Engine.get_version_info().hex < 0x040600:
+		button.gui_input.connect(_on_button_gui_input.bind(button))
+		button.focus_entered.connect(_on_button_focus_entered.bind(button), CONNECT_DEFERRED)
+		button.focus_exited.connect(button.remove_theme_stylebox_override.bind(&"focus"))
 	button.mouse_entered.connect(_on_button_mouse_entered.bind(button))
 	button.mouse_exited.connect(_on_button_mouse_exited.bind(button))
 	button.button_down.connect(button_down_player.play)
