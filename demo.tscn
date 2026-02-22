@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bi8dqotxwq6ry"]
 
-[node name="Button" type="Button"]
+[node name="Button" type="Button" unique_id=1675271177]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
